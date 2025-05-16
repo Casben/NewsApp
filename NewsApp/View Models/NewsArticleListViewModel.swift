@@ -7,6 +7,7 @@
 
 import Foundation
 
+@MainActor
 class NewsArticleListViewModel: ObservableObject {
     
     @Published var newsArticles = [NewsArticleViewModel]()
@@ -15,12 +16,10 @@ class NewsArticleListViewModel: ObservableObject {
         
         Webservice().fetchNews(by: sourceId, url: Constants.Urls.topHeadlines(by: sourceId)) { result in
             switch result {
-                case .success(let newsArticles):
-                    DispatchQueue.main.async {
-                        self.newsArticles = newsArticles.map(NewsArticleViewModel.init)
-                    }
-                case .failure(let error):
-                    print(error)
+            case .success(let newsArticles):
+                self.newsArticles = newsArticles.map(NewsArticleViewModel.init)
+            case .failure(let error):
+                print(error)
             }
         }
     }
